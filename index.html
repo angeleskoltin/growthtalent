@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Tablero de cohortes semanales de leads de Koltin: los siete pasos del embudo, dónde se cae cada semana y por qué las cohortes nuevas no son comparables todavía.">
+<style>
+  html{color-scheme:light dark}
+  :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  body{margin:0;font:14px system-ui,sans-serif}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+</style>
+<title>Funnel Semanal de Leads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Archivo:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#F7F6F0; --surface:#FFFFFF; --surface-2:#FFFFFF;
+  --ink:#0F2913; --ink-mut:#76877B; --line:#E5E5E5; --line-soft:#EFEEE7;
+  --primary:#237A4A; --deep:#203D2D; --accent:#A6EF34; --highlight:#ECF86E;
+  --ghost:#E3E7E1;
+  --good:#237A4A; --warn:#B5731A; --crit:#A53523;
+  --hm1:#EFF6F1; --hm2:#D6E9DD; --hm3:#A9D3BA; --hm4:#6CB88E; --hm5:#2E8A57;
+  --shadow:0 1px 2px rgba(15,41,19,.06), 0 8px 24px -16px rgba(15,41,19,.28);
+  --f-head:'Tausend Soft','Outfit',system-ui,sans-serif;
+  --f-body:'Apercu Pro','Archivo',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F2913; --surface:#1A3324; --surface-2:#203D2D;
+    --ink:#F4F7F2; --ink-mut:#9DB3A4; --line:#2C4A37; --line-soft:#254030;
+    --primary:#A6EF34; --deep:#0B1F11; --accent:#A6EF34; --highlight:#ECF86E;
+    --ghost:#2A4632;
+    --good:#A6EF34; --warn:#E8B45E; --crit:#F08A78;
+    --hm1:#1E3A29; --hm2:#255138; --hm3:#2F7A4E; --hm4:#4FA86D; --hm5:#8AD79F;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 26px -18px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F2913; --surface:#1A3324; --surface-2:#203D2D;
+  --ink:#F4F7F2; --ink-mut:#9DB3A4; --line:#2C4A37; --line-soft:#254030;
+  --primary:#A6EF34; --deep:#0B1F11; --accent:#A6EF34; --highlight:#ECF86E;
+  --ghost:#2A4632;
+  --good:#A6EF34; --warn:#E8B45E; --crit:#F08A78;
+  --hm1:#1E3A29; --hm2:#255138; --hm3:#2F7A4E; --hm4:#4FA86D; --hm5:#8AD79F;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 26px -18px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:var(--f-body); font-size:14px; line-height:1.5;
+  margin:0; padding-block:28px 56px; padding-left:20px; padding-right:20px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px; margin:0 auto; display:flex; flex-direction:column; gap:32px}
+h1,h2,h3{font-family:var(--f-head); margin:0; text-wrap:balance; letter-spacing:-.01em}
+h1{font-size:clamp(28px,4.2vw,40px); font-weight:700; line-height:1.08}
+h2{font-size:19px; font-weight:600}
+h3{font-size:15px; font-weight:600}
+p{margin:0}
+.num{font-variant-numeric:tabular-nums}
+.eyebrow{
+  font-size:11px; font-weight:500; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--ink-mut);
+}
+
+/* ---------- header ---------- */
+header{display:flex; flex-direction:column; gap:12px; border-bottom:1px solid var(--line); padding-bottom:22px}
+.head-top{display:flex; flex-wrap:wrap; gap:16px; align-items:flex-end; justify-content:space-between}
+.sub{color:var(--ink-mut); max-width:64ch; font-size:14.5px}
+.stamp{
+  font-size:12px; color:var(--ink-mut); text-align:right; line-height:1.7;
+  border-left:2px solid var(--primary); padding-left:12px;
+}
+.stamp b{color:var(--ink); font-weight:600}
+
+/* ---------- maturity banner ---------- */
+.banner{
+  display:flex; gap:14px; align-items:flex-start;
+  background:var(--surface); border:1px solid var(--line);
+  border-left:4px solid var(--highlight);
+  border-radius:3px; padding:16px 18px; box-shadow:var(--shadow);
+}
+.banner .mark{
+  font-family:var(--f-head); font-weight:700; font-size:12px; letter-spacing:.06em;
+  background:var(--highlight); color:#0F2913; padding:3px 8px; border-radius:2px; white-space:nowrap;
+}
+.banner p{font-size:14px}
+.banner b{font-weight:600}
+
+/* ---------- kpi row ---------- */
+.kpis{display:grid; grid-template-columns:repeat(6,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:3px; overflow:hidden}
+.kpi{background:var(--surface); padding:16px 16px 18px; display:flex; flex-direction:column; gap:7px; min-width:0}
+.kpi .lab{font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-mut); font-weight:500}
+.kpi .val{font-family:var(--f-head); font-size:26px; font-weight:700; line-height:1; font-variant-numeric:tabular-nums}
+.kpi .val small{font-size:14px; font-weight:500; color:var(--ink-mut); margin-left:2px}
+.delta{font-size:12.5px; font-weight:500; font-variant-numeric:tabular-nums; display:flex; align-items:center; gap:5px}
+.delta .dot{width:7px; height:7px; border-radius:50%; flex:none}
+.d-good{color:var(--good)} .d-good .dot{background:var(--good)}
+.d-bad{color:var(--crit)} .d-bad .dot{background:var(--crit)}
+.d-flat{color:var(--ink-mut)} .d-flat .dot{background:var(--ink-mut)}
+.chip{
+  font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; font-weight:600;
+  background:var(--ghost); color:var(--ink-mut); padding:2px 6px; border-radius:2px; align-self:flex-start;
+}
+
+/* ---------- section ---------- */
+section{display:flex; flex-direction:column; gap:16px}
+.sec-head{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:baseline; justify-content:space-between}
+.sec-head .note{font-size:13px; color:var(--ink-mut); max-width:62ch}
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:3px; padding:20px; box-shadow:var(--shadow)}
+
+/* ---------- funnel ---------- */
+.funnel{display:flex; flex-direction:column; gap:0}
+.fstep{display:grid; grid-template-columns:168px 1fr 116px; gap:14px; align-items:center; padding:9px 0}
+.fstep .fname{font-size:13.5px; font-weight:500}
+.fstep .fname em{display:block; font-style:normal; font-size:11.5px; color:var(--ink-mut)}
+.ftrack{position:relative; height:28px; background:var(--ghost); border-radius:2px; overflow:hidden}
+.fbar{position:absolute; inset:0 auto 0 0; background:var(--primary); border-radius:0 3px 3px 0}
+.fbar.soft{background:var(--hm3)}
+.fbar.par{background:repeating-linear-gradient(135deg,var(--hm3) 0 6px,var(--ghost) 6px 10px)}
+.fstep.par .fname{color:var(--ink-mut); padding-left:14px; position:relative}
+.fstep.par .fname::before{
+  content:""; position:absolute; left:2px; top:-14px; bottom:9px; width:8px;
+  border-left:1px solid var(--line); border-bottom:1px solid var(--line); border-radius:0 0 0 3px;
+}
+.fstep.par .ftrack{opacity:.9}
+.fnum{text-align:right; font-variant-numeric:tabular-nums; font-family:var(--f-head); font-weight:600; font-size:17px}
+.fnum span{display:block; font-family:var(--f-body); font-size:11.5px; font-weight:400; color:var(--ink-mut)}
+.fdrop{
+  display:grid; grid-template-columns:168px 1fr 116px; gap:14px; align-items:center;
+  font-size:12px; color:var(--ink-mut); padding:2px 0;
+}
+.fdrop .fd{
+  display:flex; align-items:center; gap:8px; grid-column:2;
+  font-variant-numeric:tabular-nums;
+}
+.fdrop .fd i{display:block; width:14px; border-top:1px dashed var(--line); flex:none}
+.fdrop b{font-weight:600; color:var(--ink)}
+.fdrop .worst{color:var(--crit); font-weight:600}
+
+/* ---------- tables ---------- */
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch}
+table{border-collapse:collapse; width:100%; min-width:720px; font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px; text-align:right; font-size:13px; white-space:nowrap}
+th{
+  font-family:var(--f-body); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink-mut); font-weight:500; border-bottom:1px solid var(--line); vertical-align:bottom;
+}
+td{border-bottom:1px solid var(--line-soft)}
+th:first-child,td:first-child{text-align:left; font-weight:500}
+tbody tr:hover td{background:var(--line-soft)}
+tr.dim td{color:var(--ink-mut)}
+.cell{display:inline-block; min-width:52px; padding:3px 7px; border-radius:2px; text-align:right}
+.hm1{background:var(--hm1)} .hm2{background:var(--hm2)} .hm3{background:var(--hm3)}
+.hm4{background:var(--hm4); color:#0F2913} .hm5{background:var(--hm5); color:#F4F7F2}
+:root[data-theme="dark"] .hm4,:root[data-theme="dark"] .hm5{color:#0B1F11}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hm4,:root:not([data-theme="light"]) .hm5{color:#0B1F11}}
+.tag-imm{
+  font-size:10px; letter-spacing:.04em; text-transform:uppercase; font-weight:600;
+  color:var(--warn); border:1px solid currentColor; padding:1px 5px; border-radius:2px; margin-left:6px;
+}
+
+/* ---------- small multiples ---------- */
+.sm-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+.sm{background:var(--surface); border:1px solid var(--line); border-radius:3px; padding:16px 16px 12px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:10px}
+.sm-head{display:flex; align-items:baseline; justify-content:space-between; gap:10px}
+.sm-head .t{font-family:var(--f-head); font-size:13.5px; font-weight:600}
+.sm-head .u{font-size:11px; color:var(--ink-mut)}
+.sm-now{display:flex; align-items:baseline; gap:8px}
+.sm-now .v{font-family:var(--f-head); font-size:22px; font-weight:700; font-variant-numeric:tabular-nums}
+svg{display:block; width:100%; height:auto; overflow:visible}
+.ax{font-size:10px; fill:var(--ink-mut); font-family:var(--f-body)}
+.gridline{stroke:var(--line-soft); stroke-width:1}
+
+/* ---------- maturation ---------- */
+.mat-grid{display:grid; grid-template-columns:1.15fr 1fr; gap:16px; align-items:stretch}
+.mat-read{display:flex; flex-direction:column; gap:14px; justify-content:center}
+.mat-row{display:flex; align-items:baseline; gap:12px; padding-bottom:12px; border-bottom:1px solid var(--line-soft)}
+.mat-row:last-child{border-bottom:0; padding-bottom:0}
+.mat-row .d{font-family:var(--f-head); font-weight:700; font-size:20px; min-width:52px; font-variant-numeric:tabular-nums}
+.mat-row .txt{font-size:13px; color:var(--ink-mut)}
+.mat-row .txt b{color:var(--ink); font-weight:600}
+
+/* ---------- tile spec ---------- */
+.tiles{display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:3px; overflow:hidden}
+.tile{background:var(--surface); padding:18px; display:flex; flex-direction:column; gap:9px}
+.tile .n{
+  font-family:var(--f-head); font-size:11px; font-weight:700; letter-spacing:.06em;
+  color:var(--primary);
+}
+.tile h3{font-size:14.5px}
+.tile p{font-size:13px; color:var(--ink-mut)}
+.tile .meta{font-size:11.5px; color:var(--ink-mut); border-top:1px solid var(--line-soft); padding-top:9px; margin-top:auto}
+.tile .meta b{color:var(--ink); font-weight:600}
+.tile.wide{grid-column:1 / -1}
+a{color:var(--primary); text-decoration:none; border-bottom:1px solid transparent; font-weight:500}
+a:hover{border-bottom-color:currentColor}
+a:focus-visible{outline:2px solid var(--primary); outline-offset:2px; border-radius:2px}
+
+/* ---------- read notes ---------- */
+.reads{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+.read{background:var(--surface); border:1px solid var(--line); border-top:3px solid var(--primary); border-radius:3px; padding:18px; display:flex; flex-direction:column; gap:8px; box-shadow:var(--shadow)}
+.read.alarm{border-top-color:var(--crit)}
+.read.ok{border-top-color:var(--accent)}
+.read h3{font-size:14.5px}
+.read p{font-size:13px; color:var(--ink-mut)}
+.read p b{color:var(--ink); font-weight:600}
+
+/* ---------- tooltip ---------- */
+#tip{
+  position:fixed; z-index:50; pointer-events:none; opacity:0; transition:opacity .12s;
+  background:var(--deep); color:#F4F7F2; font-size:12px; line-height:1.45;
+  padding:7px 10px; border-radius:3px; font-variant-numeric:tabular-nums;
+  box-shadow:0 6px 20px -8px rgba(0,0,0,.5); max-width:220px;
+}
+#tip b{font-family:var(--f-head); font-weight:600}
+:root[data-theme="dark"] #tip{background:#0B1F11; border:1px solid var(--line)}
+
+footer{border-top:1px solid var(--line); padding-top:20px; font-size:12px; color:var(--ink-mut); display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-between}
+
+@media (max-width:900px){
+  .kpis{grid-template-columns:repeat(3,1fr)}
+  .sm-grid{grid-template-columns:1fr}
+  .mat-grid{grid-template-columns:1fr}
+  .tiles{grid-template-columns:1fr}
+  .reads{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .fstep,.fdrop{grid-template-columns:110px 1fr 84px; gap:10px}
+  .fstep .fname{font-size:12.5px}
+  .fnum{font-size:15px}
+  .stamp{text-align:left; border-left:0; border-top:2px solid var(--primary); padding:10px 0 0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="head-top">
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:660px">
+        <span class="eyebrow">Koltin · Adquisición · Tablero Omni</span>
+        <h1>Funnel semanal de leads</h1>
+        <p class="sub">Cada semana genera una cohorte de leads. El tablero sigue a esa cohorte paso a paso —
+        WhatsApp, llamada, aplicación, pago— para responder dos preguntas antes de subir presupuesto:
+        <b>¿dónde se están quedando?</b> y <b>¿el lead que compro esta semana vale lo mismo que el de hace un mes?</b>
+        Siete pasos: creado, asignado, WhatsApp enviado, WhatsApp contestado, llamada conectada, aplicación abierta y pagada.</p>
+      </div>
+      <div class="stamp">
+        Corte: <b>16 sep 2026</b><br>
+        Última semana cerrada: <b>7–13 sep</b><br>
+        Fuente: <b>HubSpot + Meta + Google</b><br>
+        Modelo Omni: <b>Data Warehouse</b>
+      </div>
+    </div>
+  </header>
+
+  <div class="banner">
+    <span class="mark">LEER PRIMERO</span>
+    <div style="display:flex;flex-direction:column">
+    <p><b>Corregido el 16 sep:</b> el último paso ahora cuenta <b>leads distintos con una aplicación pagada</b>,
+    no aplicaciones pagadas. Hay ~1.28 aplicaciones por lead que paga, así que la versión anterior inflaba
+    el paso final (la semana del 29 jun pasa de 106 a <b>83</b>) y la conversión aplicación→pago (de 64% a <b>51%</b>).
+    Todos los pasos del embudo cuentan personas.</p>
+    <p style="margin-top:10px">Una cohorte tarda <b>~60 días</b> en terminar de pagar: a los 7 días sólo ves el <b>29%</b> de sus pagos,
+    a los 14 el <b>51%</b> y a los 30 el <b>75%</b>. Por eso las últimas 4 semanas <em>siempre</em> se van a ver mal
+    en la columna de pagos. Para comparar semana contra semana se usa la <b>ventana fija D7</b>; el total a la fecha
+    sólo es comparable entre cohortes de más de 8 semanas.</p>
+    </div>
+  </div>
+
+  <!-- ============ KPIs ============ -->
+  <section>
+    <div class="sec-head">
+      <h2>Los siete pasos, semana cerrada 7–13 sep</h2>
+      <p class="note">Todo a nivel lead distinto, sobre la cohorte creada esa semana. Comparado contra la semana del 31 ago.</p>
+    </div>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <!-- ============ Dónde se caen ============ -->
+  <section>
+    <div class="sec-head">
+      <h2>Dónde se caen — cohorte del 7 al 13 de septiembre</h2>
+      <p class="note">La barra llena es lo que avanzó; el fondo es la cohorte completa. La barra rayada es la asignación, que corre en paralelo y no condiciona los pasos siguientes.</p>
+    </div>
+    <div class="panel">
+      <div class="funnel" id="funnel"></div>
+    </div>
+  </section>
+
+  <!-- ============ Lectura ============ -->
+  <section>
+    <div class="reads">
+      <div class="read alarm">
+        <h3>296 leads sin asignar en una semana</h3>
+        <p>La asignación a asesor bajó de <b>91%</b> a fines de junio a <b>86.4%</b> la semana pasada.
+        Y no es un cuello de botella del embudo: el WhatsApp sale igual —de hecho se envía a
+        <b>más</b> leads de los que se asignan en 11 de las 12 semanas—, así que la asignación
+        es una rama paralela con un hueco, no un paso que frene al resto.</p>
+      </div>
+      <div class="read alarm">
+        <h3>WhatsApp deja de contestar</h3>
+        <p>La tasa de respuesta bajó de <b>61%</b> (fin de junio) a <b>50.7%</b> la semana pasada:
+        10 puntos en 10 semanas. Es la mayor caída absoluta del embudo —<b>965 leads</b> en una sola
+        semana— y el indicador que se mueve primero cuando la calidad del lead se degrada.</p>
+      </div>
+      <div class="read ok">
+        <h3>La conversión a pago aguanta</h3>
+        <p>La caída de pagos en las cohortes de agosto y septiembre es maduración, no deterioro: la
+        conversión <b>D7</b> lleva 15 semanas entre <b>0.5% y 1.6%</b> sin tendencia, y la última semana
+        cerrada marcó <b>1.11%</b>, arriba del promedio de junio–julio (0.94%).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Cohortes ============ -->
+  <section>
+    <div class="sec-head">
+      <h2>Funnel semana a semana</h2>
+      <p class="note">Leads distintos que alcanzaron cada paso, por semana de creación. Las cohortes marcadas aún no terminaron de pagar.</p>
+    </div>
+    <div class="panel scroll">
+      <table id="cohorte">
+        <thead>
+          <tr>
+            <th>Semana del lead</th><th>Leads</th><th>Asignado</th><th>WA enviado</th><th>WA contestado</th>
+            <th>Llamada conectada</th><th>Aplic. abierta</th><th>Pagada</th><th>Lead → pago</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Tasa de paso a paso</h2>
+      <p class="note">Cada columna es el % que sobrevive de un paso al siguiente. El color compara dentro de la columna, no entre columnas.</p>
+    </div>
+    <div class="panel scroll">
+      <table id="tasas">
+        <thead>
+          <tr>
+            <th>Semana del lead</th><th>Asignado / leads</th><th>WA env / leads</th><th>WA cont / env</th>
+            <th>Llamada / WA cont</th><th>Aplic / llamada</th><th>Pago / aplic</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ Escalamiento ============ -->
+  <section>
+    <div class="sec-head">
+      <h2>Cómo se comporta la inversión</h2>
+      <p class="note">12 semanas cerradas. Tres escalas distintas, tres gráficas — nunca dos ejes en la misma.</p>
+    </div>
+    <div class="sm-grid" id="sm"></div>
+  </section>
+
+  <!-- ============ Maduración ============ -->
+  <section>
+    <div class="sec-head">
+      <h2>Cuánto tarda una cohorte en pagar</h2>
+      <p class="note">Sobre 9 cohortes ya maduras (1 jun – 26 jul, 848 pagos). Es la curva que corrige la lectura de las semanas recientes.</p>
+    </div>
+    <div class="mat-grid">
+      <div class="panel"><div id="matchart"></div></div>
+      <div class="panel mat-read">
+        <div class="mat-row"><span class="d">29%</span><span class="txt">de los pagos llegan en los primeros <b>7 días</b>. Es la única ventana que ya está completa para la semana pasada.</span></div>
+        <div class="mat-row"><span class="d">51%</span><span class="txt">a los <b>14 días</b>. La mitad del resultado todavía no ocurrió.</span></div>
+        <div class="mat-row"><span class="d">75%</span><span class="txt">a los <b>30 días</b>. Un CAC calculado a D30 subestima el resultado en un tercio.</span></div>
+        <div class="mat-row"><span class="d">~60d</span><span class="txt">para cerrar la cohorte. <b>Decidir presupuesto con el total a la fecha castiga sistemáticamente a las semanas nuevas.</b></span></div>
+      </div>
+    </div>
+    <div class="panel scroll">
+      <table id="madura">
+        <thead>
+          <tr><th>Semana del lead</th><th>Leads</th><th>Pagos D7</th><th>D14</th><th>D30</th><th>Total a hoy</th><th>Conv. D7</th><th>Edad</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ Tiles ============ -->
+  <section>
+    <div class="sec-head">
+      <h2>Las 7 tiles, listas para guardar en Omni</h2>
+      <p class="note">Cada query ya está construida y corrida contra el modelo Data Warehouse. Abrir el link, <em>Save to dashboard</em>, y queda en el tablero.</p>
+    </div>
+    <div class="tiles" id="tiles"></div>
+  </section>
+
+  <footer>
+    <span>Koltin · Growth · tablero de escalamiento semanal</span>
+    <span>Semana ISO, inicio lunes · Moneda MXN · Cohorte por fecha de creación del lead en HubSpot</span>
+  </footer>
+</div>
+
+<div id="tip" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+  var NS="http://www.w3.org/2000/svg";
+  var tip=document.getElementById("tip");
+  function showTip(e,html){tip.innerHTML=html;tip.style.opacity="1";moveTip(e);}
+  function moveTip(e){
+    var x=e.clientX+14, y=e.clientY+14;
+    var r=tip.getBoundingClientRect();
+    if(x+r.width>window.innerWidth-10) x=e.clientX-r.width-14;
+    if(y+r.height>window.innerHeight-10) y=e.clientY-r.height-14;
+    tip.style.left=x+"px"; tip.style.top=y+"px";
+  }
+  function hideTip(){tip.style.opacity="0";}
+  function bind(el,html){
+    el.addEventListener("mouseenter",function(e){showTip(e,html)});
+    el.addEventListener("mousemove",moveTip);
+    el.addEventListener("mouseleave",hideTip);
+  }
+  function el(tag,attrs,parent){
+    var n=document.createElementNS(NS,tag);
+    for(var k in attrs) n.setAttribute(k,attrs[k]);
+    if(parent) parent.appendChild(n);
+    return n;
+  }
+  var nf=new Intl.NumberFormat("es-MX");
+  function n(v){return nf.format(v)}
+  function pct(v,d){return (v*100).toFixed(d===undefined?1:d)+"%"}
+  function money(v){return "$"+nf.format(Math.round(v))}
+
+  /* ============================ DATOS ============================ */
+  /* Cohortes por semana de creación del lead (lunes), leads distintos por paso. */
+  var COH=[
+    {w:"29 jun", l:2651, g:2421, e:2440, c:1488, ll:488, a:164, p:83,  mad:11},
+    {w:"6 jul",  l:3121, g:2795, e:2896, c:1805, ll:614, a:214, p:104, mad:10},
+    {w:"13 jul", l:2861, g:2600, e:2646, c:1599, ll:550, a:195, p:83,  mad:9},
+    {w:"20 jul", l:3013, g:2686, e:2762, c:1643, ll:593, a:214, p:113, mad:8},
+    {w:"27 jul", l:3322, g:2998, e:3025, c:1827, ll:585, a:231, p:109, mad:7},
+    {w:"3 ago",  l:2678, g:2325, e:2409, c:1474, ll:561, a:208, p:94,  mad:6},
+    {w:"10 ago", l:2741, g:2392, e:2482, c:1443, ll:589, a:230, p:83,  mad:5},
+    {w:"17 ago", l:2624, g:2325, e:2392, c:1332, ll:535, a:204, p:62,  mad:4},
+    {w:"24 ago", l:2426, g:2131, e:2217, c:1266, ll:454, a:162, p:54,  mad:3},
+    {w:"31 ago", l:2404, g:2122, e:2170, c:1166, ll:459, a:169, p:36,  mad:2},
+    {w:"7 sep",  l:2172, g:1876, e:1956, c:991,  ll:373, a:116, p:23,  mad:1}
+  ];
+  /* Ventanas fijas D7/D14/D30 y total a hoy, por cohorte. */
+  var MAD=[
+    {w:"1 jun",  l:2689, d7:13, d14:29, d30:55, tot:90,  age:15},
+    {w:"8 jun",  l:2573, d7:14, d14:33, d30:55, tot:81,  age:14},
+    {w:"15 jun", l:2899, d7:24, d14:40, d30:57, tot:84,  age:13},
+    {w:"22 jun", l:2845, d7:36, d14:50, d30:71, tot:93,  age:12},
+    {w:"29 jun", l:2627, d7:27, d14:43, d30:67, tot:88,  age:11},
+    {w:"6 jul",  l:3101, d7:40, d14:61, d30:83, tot:106, age:10},
+    {w:"13 jul", l:2838, d7:23, d14:51, d30:69, tot:88,  age:9},
+    {w:"20 jul", l:3041, d7:31, d14:65, d30:87, tot:106, age:8},
+    {w:"27 jul", l:3320, d7:36, d14:57, d30:94, tot:112, age:7},
+    {w:"3 ago",  l:2689, d7:17, d14:41, d30:75, tot:84,  age:6},
+    {w:"10 ago", l:2752, d7:23, d14:52, d30:82, tot:88,  age:5},
+    {w:"17 ago", l:2645, d7:21, d14:49, d30:74, tot:74,  age:4},
+    {w:"24 ago", l:2477, d7:39, d14:48, d30:53, tot:53,  age:3},
+    {w:"31 ago", l:2392, d7:24, d14:37, d30:39, tot:39,  age:2},
+    {w:"7 sep",  l:2260, d7:25, d14:27, d30:27, tot:27,  age:1}
+  ];
+  /* Inversión Meta+Google, leads atribuidos y CPL, por semana cerrada. */
+  var INV=[
+    {w:"22 jun", s:1315439, l:2117, cpl:621.37},
+    {w:"29 jun", s:1160595, l:2002, cpl:579.72},
+    {w:"6 jul",  s:1176281, l:2351, cpl:500.33},
+    {w:"13 jul", s:985924,  l:2066, cpl:477.21},
+    {w:"20 jul", s:1100662, l:2148, cpl:512.41},
+    {w:"27 jul", s:1542738, l:2458, cpl:627.64},
+    {w:"3 ago",  s:1337502, l:1957, cpl:683.44},
+    {w:"10 ago", s:1460809, l:2085, cpl:700.63},
+    {w:"17 ago", s:1324534, l:2021, cpl:655.39},
+    {w:"24 ago", s:1409733, l:1967, cpl:716.69},
+    {w:"31 ago", s:1325921, l:1832, cpl:723.76},
+    {w:"7 sep",  s:1395601, l:1783, cpl:782.73}
+  ];
+
+  /* ============================ KPIs ============================ */
+  var KPI=[
+    {lab:"Leads creados", val:"2,172", d:"−9.7%", dir:"bad", note:"2,404"},
+    {lab:"Asignados", val:"86.4%", d:"−1.9 pts", dir:"bad", note:"88.3% · 296 leads sin asignar"},
+    {lab:"WhatsApp enviado", val:"90.1%", d:"−0.2 pts", dir:"flat", note:"90.3%"},
+    {lab:"WhatsApp contestado", val:"50.7%", d:"−3.0 pts", dir:"bad", note:"53.7%"},
+    {lab:"Llamada conectada", val:"373", d:"−18.7%", dir:"bad", note:"459"},
+    {lab:"Conversión D7", val:"1.11%", d:"+0.11 pts", dir:"good", note:"1.00%"}
+  ];
+  var kw=document.getElementById("kpis");
+  KPI.forEach(function(k){
+    var d=document.createElement("div"); d.className="kpi";
+    var cls=k.dir==="good"?"d-good":k.dir==="bad"?"d-bad":"d-flat";
+    d.innerHTML='<span class="lab">'+k.lab+'</span>'+
+      '<span class="val">'+k.val+(k.sub?'<small>'+k.sub+'</small>':'')+'</span>'+
+      '<span class="delta '+cls+'"><i class="dot"></i>'+k.d+'</span>'+
+      (k.chip?'<span class="chip">'+k.chip+'</span>':'');
+    bind(d,"<b>"+k.lab+"</b><br>Semana anterior: "+k.note);
+    kw.appendChild(d);
+  });
+
+  /* ============================ Funnel ============================ */
+  var last=COH[COH.length-1];
+  var STEPS=[
+    {k:"Leads creados", s:"toda la cohorte", v:last.l, base:null, prev:null},
+    {k:"Asignado a asesor", s:"sobre leads · rama paralela", v:last.g, base:last.l, prev:null, par:true},
+    {k:"WhatsApp enviado", s:"sobre leads", v:last.e, base:last.l, prev:last.l},
+    {k:"WhatsApp contestado", s:"sobre enviados", v:last.c, base:last.e, prev:last.e},
+    {k:"Llamada conectada", s:"sobre contestados", v:last.ll, base:last.c, prev:last.c},
+    {k:"Aplicación abierta", s:"sobre llamadas", v:last.a, base:last.ll, prev:last.ll},
+    {k:"Pagada", s:"sobre aplicaciones · inmaduro", v:last.p, base:last.a, prev:last.a, soft:true}
+  ];
+  var fw=document.getElementById("funnel");
+  var maxLoss=0;
+  STEPS.forEach(function(st){ if(st.prev && !st.soft){var L=st.prev-st.v; if(L>maxLoss) maxLoss=L;} });
+  STEPS.forEach(function(st){
+    if(st.prev){
+      var lost=st.prev-st.v;
+      var dr=document.createElement("div"); dr.className="fdrop";
+      var worst=(lost===maxLoss && !st.soft);
+      dr.innerHTML='<span class="fd"><i></i>hacia '+st.k.toLowerCase()+': se pierden <b class="'+(worst?"worst":"")+'">'+n(lost)+'</b> leads'+
+        (worst?' &nbsp;·&nbsp; <span class="worst">mayor caída de la semana</span>':'')+'</span>';
+      fw.appendChild(dr);
+    }
+    var row=document.createElement("div"); row.className="fstep"+(st.par?" par":"");
+    var w=(st.v/last.l*100).toFixed(2);
+    row.innerHTML='<span class="fname">'+st.k+'<em>'+st.s+'</em></span>'+
+      '<span class="ftrack"><span class="fbar'+(st.soft?" soft":"")+(st.par?" par":"")+'" style="width:'+w+'%"></span></span>'+
+      '<span class="fnum">'+n(st.v)+'<span>'+(st.base?pct(st.v/st.base):pct(1,0)+' de leads')+'</span></span>';
+    bind(row,"<b>"+st.k+"</b><br>"+n(st.v)+" leads · "+pct(st.v/last.l)+" de la cohorte"+
+      (st.par?"<br>No condiciona el envío de WhatsApp":st.prev?"<br>"+pct(st.v/st.prev)+" del paso anterior":""));
+    fw.appendChild(row);
+  });
+
+  /* ============================ Tabla cohorte ============================ */
+  var tb=document.querySelector("#cohorte tbody");
+  COH.forEach(function(r){
+    var imm=r.mad<=4;
+    var tr=document.createElement("tr");
+    if(imm) tr.className="dim";
+    tr.innerHTML='<td>'+r.w+(imm?'<span class="tag-imm">inmaduro</span>':'')+'</td>'+
+      '<td>'+n(r.l)+'</td><td>'+n(r.g)+'</td><td>'+n(r.e)+'</td><td>'+n(r.c)+'</td>'+
+      '<td>'+n(r.ll)+'</td><td>'+n(r.a)+'</td><td>'+n(r.p)+'</td>'+
+      '<td>'+pct(r.p/r.l,2)+'</td>';
+    bind(tr,"<b>Semana del "+r.w+"</b><br>"+r.mad+" semana"+(r.mad===1?"":"s")+" de antigüedad"+
+      (imm?"<br>Todavía le faltan pagos por llegar":"<br>Cohorte prácticamente cerrada"));
+    tb.appendChild(tr);
+  });
+
+  /* ============================ Heatmap de tasas ============================ */
+  var RATES=[
+    {key:"g",  base:"l"},{key:"e", base:"l"},{key:"c", base:"e"},
+    {key:"ll", base:"c"},{key:"a", base:"ll"},{key:"p", base:"a"}
+  ];
+  var cols=RATES.map(function(rt){
+    return COH.map(function(r){return r[rt.key]/r[rt.base]});
+  });
+  function hmClass(v,arr){
+    var mn=Math.min.apply(null,arr), mx=Math.max.apply(null,arr);
+    var t=mx===mn?0.5:(v-mn)/(mx-mn);
+    return "hm"+Math.min(5,Math.max(1,Math.ceil(t*5)||1));
+  }
+  var tt=document.querySelector("#tasas tbody");
+  COH.forEach(function(r,i){
+    var tr=document.createElement("tr");
+    var cells='<td>'+r.w+(r.mad<=4?'<span class="tag-imm">inmaduro</span>':'')+'</td>';
+    RATES.forEach(function(rt,j){
+      var v=cols[j][i];
+      cells+='<td><span class="cell '+hmClass(v,cols[j])+'">'+pct(v)+'</span></td>';
+    });
+    tr.innerHTML=cells;
+    bind(tr,"<b>Semana del "+r.w+"</b><br>"+n(r.l)+" leads → "+n(r.p)+" pagos<br>"+
+      "Lead → pago: "+pct(r.p/r.l,2));
+    tt.appendChild(tr);
+  });
+
+  /* ============================ Small multiples ============================ */
+  function sparkBars(host,data,acc,fmt,color){
+    var W=320,H=92,pad={t:8,r:4,b:18,l:4};
+    var svg=el("svg",{viewBox:"0 0 "+W+" "+H,preserveAspectRatio:"none",role:"img"},host);
+    var vals=data.map(acc), mx=Math.max.apply(null,vals);
+    var iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
+    var bw=iw/data.length, gap=2.2;
+    el("line",{x1:pad.l,y1:pad.t+ih,x2:W-pad.r,y2:pad.t+ih,class:"gridline"},svg);
+    data.forEach(function(d,i){
+      var h=Math.max(2,(acc(d)/mx)*ih);
+      var x=pad.l+i*bw+gap/2, y=pad.t+ih-h;
+      var lastOne=i===data.length-1;
+      var r=el("rect",{x:x.toFixed(2),y:y.toFixed(2),width:(bw-gap).toFixed(2),height:h.toFixed(2),
+        rx:2,fill:lastOne?"var(--primary)":color,"fill-opacity":lastOne?1:.62},svg);
+      bind(r,"<b>"+d.w+"</b><br>"+fmt(acc(d)));
+    });
+    var f=el("text",{x:pad.l,y:H-4,class:"ax"},svg); f.textContent=data[0].w;
+    var l=el("text",{x:W-pad.r,y:H-4,class:"ax","text-anchor":"end"},svg); l.textContent=data[data.length-1].w;
+  }
+  function sparkLine(host,data,acc,fmt){
+    var W=320,H=92,pad={t:12,r:8,b:18,l:8};
+    var svg=el("svg",{viewBox:"0 0 "+W+" "+H,preserveAspectRatio:"none",role:"img"},host);
+    var vals=data.map(acc), mx=Math.max.apply(null,vals), mn=Math.min.apply(null,vals);
+    var span=(mx-mn)||1; mn-=span*0.18; mx+=span*0.12; span=mx-mn;
+    var iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
+    var X=function(i){return pad.l+(data.length===1?iw/2:i*iw/(data.length-1))};
+    var Y=function(v){return pad.t+ih-((v-mn)/span)*ih};
+    var dLine="",dArea="";
+    data.forEach(function(d,i){
+      var x=X(i),y=Y(acc(d));
+      dLine+=(i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1);
+    });
+    dArea=dLine+"L"+X(data.length-1).toFixed(1)+" "+(pad.t+ih)+"L"+X(0).toFixed(1)+" "+(pad.t+ih)+"Z";
+    el("path",{d:dArea,fill:"var(--primary)","fill-opacity":".10",stroke:"none"},svg);
+    el("path",{d:dLine,fill:"none",stroke:"var(--primary)","stroke-width":2,
+      "stroke-linejoin":"round","stroke-linecap":"round"},svg);
+    data.forEach(function(d,i){
+      var x=X(i),y=Y(acc(d)),lastOne=i===data.length-1;
+      if(lastOne){
+        el("circle",{cx:x,cy:y,r:5,fill:"var(--primary)",stroke:"var(--surface)","stroke-width":2},svg);
+      }
+      var hit=el("circle",{cx:x,cy:y,r:11,fill:"transparent"},svg);
+      bind(hit,"<b>"+d.w+"</b><br>"+fmt(acc(d)));
+    });
+    var f=el("text",{x:pad.l,y:H-4,class:"ax"},svg); f.textContent=data[0].w;
+    var l=el("text",{x:W-pad.r,y:H-4,class:"ax","text-anchor":"end"},svg); l.textContent=data[data.length-1].w;
+  }
+  var SM=[
+    {t:"Inversión", u:"MXN por semana", now:"$1.40M", note:"plana hace 10 semanas",
+     kind:"bar", acc:function(d){return d.s}, fmt:function(v){return money(v)+" MXN"}},
+    {t:"Leads atribuidos", u:"Meta + Google", now:"1,783", note:"−27% desde el pico del 27 jul",
+     kind:"bar", acc:function(d){return d.l}, fmt:function(v){return n(v)+" leads"}},
+    {t:"CPL", u:"MXN por lead", now:"$783", note:"+64% desde el mínimo del 13 jul",
+     kind:"line", acc:function(d){return d.cpl}, fmt:function(v){return money(v)+" MXN"}}
+  ];
+  var smw=document.getElementById("sm");
+  SM.forEach(function(c){
+    var d=document.createElement("div"); d.className="sm";
+    d.innerHTML='<div class="sm-head"><span class="t">'+c.t+'</span><span class="u">'+c.u+'</span></div>'+
+      '<div class="sm-now"><span class="v">'+c.now+'</span><span class="u" style="font-size:12px;color:var(--ink-mut)">'+c.note+'</span></div>';
+    var host=document.createElement("div"); d.appendChild(host);
+    smw.appendChild(d);
+    if(c.kind==="bar") sparkBars(host,INV,c.acc,c.fmt,"var(--primary)");
+    else sparkLine(host,INV,c.acc,c.fmt);
+  });
+
+  /* ============================ Curva de maduración ============================ */
+  (function(){
+    var host=document.getElementById("matchart");
+    var pts=[{d:0,v:0},{d:7,v:.288},{d:14,v:.506},{d:30,v:.752},{d:60,v:1}];
+    var W=520,H=260,pad={t:16,r:22,b:40,l:44};
+    var svg=el("svg",{viewBox:"0 0 "+W+" "+H,role:"img"},host);
+    var iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
+    var X=function(d){return pad.l+(d/60)*iw};
+    var Y=function(v){return pad.t+ih-v*ih};
+    [0,.25,.5,.75,1].forEach(function(g){
+      el("line",{x1:pad.l,y1:Y(g),x2:W-pad.r,y2:Y(g),class:"gridline"},svg);
+      var t=el("text",{x:pad.l-9,y:Y(g)+4,class:"ax","text-anchor":"end"},svg);
+      t.textContent=Math.round(g*100)+"%";
+    });
+    var dl="",da="";
+    pts.forEach(function(p,i){ dl+=(i?"L":"M")+X(p.d).toFixed(1)+" "+Y(p.v).toFixed(1); });
+    da=dl+"L"+X(60)+" "+Y(0)+"L"+X(0)+" "+Y(0)+"Z";
+    el("path",{d:da,fill:"var(--primary)","fill-opacity":".12"},svg);
+    el("path",{d:dl,fill:"none",stroke:"var(--primary)","stroke-width":2,"stroke-linejoin":"round"},svg);
+    /* zona aún no observable para la semana pasada */
+    el("rect",{x:X(7),y:pad.t,width:(X(60)-X(7)).toFixed(1),height:ih,
+      fill:"var(--ink-mut)","fill-opacity":".07"},svg);
+    var zl=el("text",{x:X(7)+8,y:pad.t+16,class:"ax"},svg);
+    zl.textContent="todavía no observable para la semana del 7 sep";
+    pts.forEach(function(p){
+      if(!p.d) return;
+      el("circle",{cx:X(p.d),cy:Y(p.v),r:4.5,fill:"var(--primary)",stroke:"var(--surface)","stroke-width":2},svg);
+      var lb=el("text",{x:X(p.d),y:Y(p.v)-13,class:"ax","text-anchor":"middle",
+        "font-weight":"600",fill:"var(--ink)"},svg);
+      lb.textContent=Math.round(p.v*100)+"%";
+      var hit=el("circle",{cx:X(p.d),cy:Y(p.v),r:14,fill:"transparent"},svg);
+      bind(hit,"<b>Día "+p.d+"</b><br>"+Math.round(p.v*100)+"% de los pagos de la cohorte ya ocurrieron");
+    });
+    [0,7,14,30,60].forEach(function(d){
+      var t=el("text",{x:X(d),y:H-16,class:"ax","text-anchor":"middle"},svg);
+      t.textContent="D"+d;
+    });
+    var ax=el("text",{x:pad.l+iw/2,y:H-2,class:"ax","text-anchor":"middle"},svg);
+    ax.textContent="días desde que se creó el lead";
+  })();
+
+  /* ============================ Tabla maduración ============================ */
+  var mt=document.querySelector("#madura tbody");
+  MAD.forEach(function(r){
+    var imm=r.age<=4;
+    var tr=document.createElement("tr");
+    if(imm) tr.className="dim";
+    tr.innerHTML='<td>'+r.w+'</td><td>'+n(r.l)+'</td><td>'+n(r.d7)+'</td>'+
+      '<td>'+(r.age>=3?n(r.d14):"—")+'</td><td>'+(r.age>=5?n(r.d30):"—")+'</td>'+
+      '<td>'+n(r.tot)+(imm?'<span class="tag-imm">parcial</span>':'')+'</td>'+
+      '<td>'+pct(r.d7/r.l,2)+'</td><td>'+r.age+' sem</td>';
+    bind(tr,"<b>Semana del "+r.w+"</b><br>Conversión D7: "+pct(r.d7/r.l,2)+
+      (imm?"<br>D14/D30 aún no cumplen la ventana":"<br>Cohorte madura, total confiable"));
+    mt.appendChild(tr);
+  });
+
+  /* ============================ Tiles ============================ */
+  var TILES=[
+    {n:"TILE 1", t:"Funnel por cohorte semanal", p:"Los siete pasos —creado, asignado, WhatsApp enviado y contestado, llamada, aplicación y pago— contando leads distintos. El corazón del tablero.",
+     m:"Tabla · 12 semanas · topic Leads and Applications", u:"https://koltin.omniapp.co/e/1:MbOHWCI7/1"},
+    {n:"TILE 2", t:"Tasa de paso a paso", p:"Los seis porcentajes de supervivencia por semana. Aquí se ve el deterioro de respuesta de WhatsApp antes que en ningún otro lado.",
+     m:"Table calcs sobre la Tile 1 · formato condicional por columna", u:"https://koltin.omniapp.co/e/1:MbOHWCI7/1"},
+    {n:"TILE 3", t:"Ventanas fijas D7 / D14 / D30", p:"Pagos de cada cohorte a los 7, 14 y 30 días más el total a hoy. Es la tile que hace comparables las semanas nuevas.",
+     m:"Tabla · 16 semanas", u:"https://koltin.omniapp.co/e/1:ZOTxLrx-/1"},
+    {n:"TILE 4", t:"Funnel por canal y semana", p:"El mismo embudo abierto por utm source — google, meta y llamada entrante convierten muy distinto. Ojo: esta query aún cuenta aplicaciones como objetos, hay que pasarla a leads distintos.",
+     m:"Tabla pivoteada · top 4 fuentes", u:"https://koltin.omniapp.co/e/1:LEuq1ipg/1"},
+    {n:"TILE 5", t:"Gasto unificado semanal", p:"Meta + Google en MXN y USD, con clicks, impresiones y variación semanal. Ya existe, se reutiliza tal cual.",
+     m:"Query guardada · dashboard Marketing Performance", u:"https://koltin.omniapp.co/w/a535c33c?key=27"},
+    {n:"TILE 6", t:"Performance por canal y semana", p:"Gasto, CPC, leads, CPL, deals, pagos, CAC y ROAS por canal con su % de cambio. De aquí salen los KPIs de arriba.",
+     m:"Query guardada · dashboard Marketing Performance", u:"https://koltin.omniapp.co/w/a535c33c?key=10"},
+    {n:"TILE 7", t:"Curva de maduración", p:"Qué fracción de los pagos ya ocurrió a cada día desde la creación del lead. Se recalcula una vez al mes, no semanalmente.",
+     m:"Derivada de la Tile 3 sobre cohortes de 8+ semanas", u:null, wide:true}
+  ];
+  var tw=document.getElementById("tiles");
+  TILES.forEach(function(t){
+    var d=document.createElement("div"); d.className="tile"+(t.wide?" wide":"");
+    d.innerHTML='<span class="n">'+t.n+'</span><h3>'+t.t+'</h3><p>'+t.p+'</p>'+
+      '<span class="meta">'+t.m+(t.u?' · <a href="'+t.u+'" target="_blank" rel="noopener">Abrir en Omni</a>':'')+'</span>';
+    tw.appendChild(d);
+  });
+})();
+</script>
+
+</body>
+</html>
