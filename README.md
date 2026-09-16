@@ -1,9 +1,19 @@
 # Tablero: Funnel semanal de leads
 
 Tablero de escalamiento de inversión para Koltin. Sigue a cada **cohorte semanal de
-leads** paso a paso por el embudo para responder dos preguntas antes de subir
-presupuesto: dónde se están quedando los leads, y si el lead de esta semana vale lo
-mismo que el de hace un mes.
+leads** por los siete pasos del embudo —creado, asignado, WhatsApp enviado, WhatsApp
+contestado, llamada conectada, aplicación abierta y pagada— para responder dos
+preguntas antes de subir presupuesto: dónde se están quedando los leads, y si el lead
+de esta semana vale lo mismo que el de hace un mes.
+
+## "Asignado" no es un paso secuencial
+
+En 11 de las 12 semanas medidas se envía WhatsApp a **más** leads de los que se asignan
+a un asesor (semana del 7 sep: 1,876 asignados contra 1,956 con WhatsApp enviado). El
+envío no espera a la asignación. En el tablero se dibuja como **rama paralela**, no
+como paso de la cadena — ponerlo en secuencia haría que el embudo mienta.
+
+La asignación bajó de 91% (fin de junio) a 86.4%: ~296 leads por semana sin dueño.
 
 `index.html` es el tablero (estático, sin dependencias). Los datos están embebidos en
 el `<script>` al final del archivo — se actualizan corriendo las queries de abajo en
@@ -31,8 +41,11 @@ es comparable entre cohortes de más de 8 semanas.
 - **Cohorte**: fecha de creación del lead en HubSpot (`real_created_at`), no fecha del evento.
 - **Semana**: inicio lunes, en todas las tiles. Algunas queries de Omni agrupan por semana
   de domingo — si no se fija el mismo inicio, los totales no cuadran entre tiles.
-- **Conteo por paso**: leads *distintos* que alcanzaron el paso, no cantidad de objetos.
-  Contar aplicaciones en vez de leads-con-aplicación infla el paso ~40%.
+- **Conteo por paso**: leads *distintos* que alcanzaron el paso, nunca cantidad de objetos.
+  El modelo expone las dos cosas y es fácil mezclarlas. Para la semana del 29 jun:
+  231 aplicaciones creadas contra 164 leads con aplicación, y 106 aplicaciones pagadas
+  contra **83 leads que pagaron** (~1.28 aplicaciones por lead que paga). Usar objetos
+  en el último paso infla la conversión aplicación→pago de 51% a 64%.
 - **Moneda**: MXN. Inversión = Meta + Google.
 - **Leads**: HubSpot cuenta todas las fuentes (~2,200/sem); las tiles de inversión sólo
   cuentan los leads atribuidos a Meta/Google (~1,800/sem). El CPL usa los atribuidos.
@@ -44,13 +57,16 @@ topic `Leads and Applications`.
 
 | # | Tile | Query |
 |---|------|-------|
-| 1 | Funnel por cohorte semanal | https://koltin.omniapp.co/e/1:DCo-hmSP/1 |
-| 2 | Tasa de paso a paso | https://koltin.omniapp.co/e/1:nkpHFO55/1 |
-| 3 | Ventanas fijas D7 / D14 / D30 | https://koltin.omniapp.co/e/1:mMgDMBSk/1 |
+| 1 | Funnel por cohorte semanal (7 pasos) | https://koltin.omniapp.co/e/1:MbOHWCI7/1 |
+| 2 | Tasa de paso a paso | table calcs sobre la Tile 1 |
+| 3 | Ventanas fijas D7 / D14 / D30 | https://koltin.omniapp.co/e/1:ZOTxLrx-/1 |
 | 4 | Funnel por canal y semana | https://koltin.omniapp.co/e/1:LEuq1ipg/1 |
 | 5 | Gasto unificado semanal | https://koltin.omniapp.co/w/a535c33c?key=27 |
 | 6 | Performance por canal y semana | https://koltin.omniapp.co/w/a535c33c?key=10 |
 | 7 | Curva de maduración | derivada de la Tile 3 sobre cohortes de 8+ semanas |
+
+**Pendiente**: la Tile 4 todavía cuenta aplicaciones como objetos. Hay que pasarla a
+leads distintos para que cierre con las demás.
 
 Las tiles 5 y 6 ya existen en el dashboard *Marketing Performance & Channel Analytics*
 y se reutilizan tal cual. Las tiles 1–4 son nuevas: abrir el link, **Save to dashboard**.
@@ -65,3 +81,5 @@ La tile 7 se recalcula una vez al mes, no semanalmente.
   primero cuando la calidad del lead se degrada, y se sabe en 48 horas.
 - **La conversión a pago aguanta**: D7 lleva 15 semanas entre 0.5% y 1.6% sin tendencia.
   La caída de pagos en las cohortes de agosto y septiembre es maduración, no deterioro.
+- **Mayor caída del embudo**: WhatsApp contestado, 965 leads en la semana del 7 sep.
+- **296 leads sin asignar** esa misma semana.

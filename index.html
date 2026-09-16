@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Tablero de cohortes semanales de leads de Koltin: dónde se cae cada semana, cómo se mueve el CPL y por qué las cohortes nuevas no son comparables todavía.">
+<meta name="description" content="Tablero de cohortes semanales de leads de Koltin: los siete pasos del embudo, dónde se cae cada semana y por qué las cohortes nuevas no son comparables todavía.">
 <style>
   html{color-scheme:light dark}
   :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -120,6 +120,13 @@ section{display:flex; flex-direction:column; gap:16px}
 .ftrack{position:relative; height:28px; background:var(--ghost); border-radius:2px; overflow:hidden}
 .fbar{position:absolute; inset:0 auto 0 0; background:var(--primary); border-radius:0 3px 3px 0}
 .fbar.soft{background:var(--hm3)}
+.fbar.par{background:repeating-linear-gradient(135deg,var(--hm3) 0 6px,var(--ghost) 6px 10px)}
+.fstep.par .fname{color:var(--ink-mut); padding-left:14px; position:relative}
+.fstep.par .fname::before{
+  content:""; position:absolute; left:2px; top:-14px; bottom:9px; width:8px;
+  border-left:1px solid var(--line); border-bottom:1px solid var(--line); border-radius:0 0 0 3px;
+}
+.fstep.par .ftrack{opacity:.9}
 .fnum{text-align:right; font-variant-numeric:tabular-nums; font-family:var(--f-head); font-weight:600; font-size:17px}
 .fnum span{display:block; font-family:var(--f-body); font-size:11.5px; font-weight:400; color:var(--ink-mut)}
 .fdrop{
@@ -242,7 +249,8 @@ footer{border-top:1px solid var(--line); padding-top:20px; font-size:12px; color
         <h1>Funnel semanal de leads</h1>
         <p class="sub">Cada semana genera una cohorte de leads. El tablero sigue a esa cohorte paso a paso —
         WhatsApp, llamada, aplicación, pago— para responder dos preguntas antes de subir presupuesto:
-        <b>¿dónde se están quedando?</b> y <b>¿el lead que compro esta semana vale lo mismo que el de hace un mes?</b></p>
+        <b>¿dónde se están quedando?</b> y <b>¿el lead que compro esta semana vale lo mismo que el de hace un mes?</b>
+        Siete pasos: creado, asignado, WhatsApp enviado, WhatsApp contestado, llamada conectada, aplicación abierta y pagada.</p>
       </div>
       <div class="stamp">
         Corte: <b>16 sep 2026</b><br>
@@ -255,17 +263,23 @@ footer{border-top:1px solid var(--line); padding-top:20px; font-size:12px; color
 
   <div class="banner">
     <span class="mark">LEER PRIMERO</span>
-    <p>Una cohorte tarda <b>~60 días</b> en terminar de pagar: a los 7 días sólo ves el <b>29%</b> de sus pagos,
+    <div style="display:flex;flex-direction:column">
+    <p><b>Corregido el 16 sep:</b> el último paso ahora cuenta <b>leads distintos con una aplicación pagada</b>,
+    no aplicaciones pagadas. Hay ~1.28 aplicaciones por lead que paga, así que la versión anterior inflaba
+    el paso final (la semana del 29 jun pasa de 106 a <b>83</b>) y la conversión aplicación→pago (de 64% a <b>51%</b>).
+    Todos los pasos del embudo cuentan personas.</p>
+    <p style="margin-top:10px">Una cohorte tarda <b>~60 días</b> en terminar de pagar: a los 7 días sólo ves el <b>29%</b> de sus pagos,
     a los 14 el <b>51%</b> y a los 30 el <b>75%</b>. Por eso las últimas 4 semanas <em>siempre</em> se van a ver mal
     en la columna de pagos. Para comparar semana contra semana se usa la <b>ventana fija D7</b>; el total a la fecha
     sólo es comparable entre cohortes de más de 8 semanas.</p>
+    </div>
   </div>
 
   <!-- ============ KPIs ============ -->
   <section>
     <div class="sec-head">
-      <h2>Semana cerrada 7–13 sep, contra la anterior</h2>
-      <p class="note">Inversión y CPL vienen de Meta + Google atribuidos. Leads y tasas vienen de HubSpot, todas las fuentes.</p>
+      <h2>Los siete pasos, semana cerrada 7–13 sep</h2>
+      <p class="note">Todo a nivel lead distinto, sobre la cohorte creada esa semana. Comparado contra la semana del 31 ago.</p>
     </div>
     <div class="kpis" id="kpis"></div>
   </section>
@@ -274,7 +288,7 @@ footer{border-top:1px solid var(--line); padding-top:20px; font-size:12px; color
   <section>
     <div class="sec-head">
       <h2>Dónde se caen — cohorte del 7 al 13 de septiembre</h2>
-      <p class="note">La barra llena es lo que avanzó; el fondo es la cohorte completa. Entre paso y paso, cuántos leads se pierden.</p>
+      <p class="note">La barra llena es lo que avanzó; el fondo es la cohorte completa. La barra rayada es la asignación, que corre en paralelo y no condiciona los pasos siguientes.</p>
     </div>
     <div class="panel">
       <div class="funnel" id="funnel"></div>
@@ -285,22 +299,23 @@ footer{border-top:1px solid var(--line); padding-top:20px; font-size:12px; color
   <section>
     <div class="reads">
       <div class="read alarm">
-        <h3>El lead se encareció 64%</h3>
-        <p>Con el gasto prácticamente plano (~$1.3M MXN/semana), el CPL pasó de <b>$477</b> a mediados de julio a
-        <b>$783</b> la semana pasada. Los leads cayeron de <b>2,458</b> a <b>1,783</b> atribuidos. Escalar sobre
-        esta curva compra leads cada vez más caros, no más leads.</p>
+        <h3>296 leads sin asignar en una semana</h3>
+        <p>La asignación a asesor bajó de <b>91%</b> a fines de junio a <b>86.4%</b> la semana pasada.
+        Y no es un cuello de botella del embudo: el WhatsApp sale igual —de hecho se envía a
+        <b>más</b> leads de los que se asignan en 11 de las 12 semanas—, así que la asignación
+        es una rama paralela con un hueco, no un paso que frene al resto.</p>
       </div>
       <div class="read alarm">
         <h3>WhatsApp deja de contestar</h3>
-        <p>La tasa de respuesta a WhatsApp bajó de <b>61%</b> (fin de junio) a <b>51%</b> la semana pasada:
-        10 puntos en 10 semanas. Es el indicador que se mueve primero cuando la calidad del lead se degrada, y no
-        depende de maduración — se sabe en 48 horas.</p>
+        <p>La tasa de respuesta bajó de <b>61%</b> (fin de junio) a <b>50.7%</b> la semana pasada:
+        10 puntos en 10 semanas. Es la mayor caída absoluta del embudo —<b>965 leads</b> en una sola
+        semana— y el indicador que se mueve primero cuando la calidad del lead se degrada.</p>
       </div>
       <div class="read ok">
         <h3>La conversión a pago aguanta</h3>
-        <p>La caída de pagos por cohorte de agosto y septiembre es maduración, no deterioro: la conversión
-        <b>D7</b> lleva 15 semanas entre <b>0.5% y 1.6%</b> sin tendencia, y la última semana cerrada marcó
-        <b>1.11%</b>, arriba del promedio de junio–julio (0.94%).</p>
+        <p>La caída de pagos en las cohortes de agosto y septiembre es maduración, no deterioro: la
+        conversión <b>D7</b> lleva 15 semanas entre <b>0.5% y 1.6%</b> sin tendencia, y la última semana
+        cerrada marcó <b>1.11%</b>, arriba del promedio de junio–julio (0.94%).</p>
       </div>
     </div>
   </section>
@@ -309,14 +324,14 @@ footer{border-top:1px solid var(--line); padding-top:20px; font-size:12px; color
   <section>
     <div class="sec-head">
       <h2>Funnel semana a semana</h2>
-      <p class="note">Leads distintos que alcanzaron cada paso, por semana de creación del lead. Las cohortes marcadas aún no terminaron de pagar.</p>
+      <p class="note">Leads distintos que alcanzaron cada paso, por semana de creación. Las cohortes marcadas aún no terminaron de pagar.</p>
     </div>
     <div class="panel scroll">
       <table id="cohorte">
         <thead>
           <tr>
-            <th>Semana del lead</th><th>Leads</th><th>WA enviado</th><th>WA contestado</th>
-            <th>Llamada conectada</th><th>Aplicación</th><th>Pagada</th><th>Lead → pago</th>
+            <th>Semana del lead</th><th>Leads</th><th>Asignado</th><th>WA enviado</th><th>WA contestado</th>
+            <th>Llamada conectada</th><th>Aplic. abierta</th><th>Pagada</th><th>Lead → pago</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -333,7 +348,7 @@ footer{border-top:1px solid var(--line); padding-top:20px; font-size:12px; color
       <table id="tasas">
         <thead>
           <tr>
-            <th>Semana del lead</th><th>WA env / leads</th><th>WA cont / env</th>
+            <th>Semana del lead</th><th>Asignado / leads</th><th>WA env / leads</th><th>WA cont / env</th>
             <th>Llamada / WA cont</th><th>Aplic / llamada</th><th>Pago / aplic</th>
           </tr>
         </thead>
@@ -426,17 +441,17 @@ footer{border-top:1px solid var(--line); padding-top:20px; font-size:12px; color
   /* ============================ DATOS ============================ */
   /* Cohortes por semana de creación del lead (lunes), leads distintos por paso. */
   var COH=[
-    {w:"29 jun", l:2651, e:2440, c:1488, ll:488, a:165, p:106, mad:11},
-    {w:"6 jul",  l:3121, e:2896, c:1805, ll:614, a:217, p:138, mad:10},
-    {w:"13 jul", l:2861, e:2646, c:1599, ll:550, a:196, p:106, mad:9},
-    {w:"20 jul", l:3013, e:2762, c:1643, ll:593, a:217, p:136, mad:8},
-    {w:"27 jul", l:3322, e:3025, c:1827, ll:585, a:235, p:141, mad:7},
-    {w:"3 ago",  l:2678, e:2409, c:1474, ll:561, a:211, p:108, mad:6},
-    {w:"10 ago", l:2741, e:2482, c:1443, ll:589, a:231, p:99,  mad:5},
-    {w:"17 ago", l:2624, e:2392, c:1332, ll:535, a:206, p:83,  mad:4},
-    {w:"24 ago", l:2426, e:2217, c:1266, ll:454, a:168, p:71,  mad:3},
-    {w:"31 ago", l:2404, e:2170, c:1166, ll:459, a:172, p:44,  mad:2},
-    {w:"7 sep",  l:2172, e:1956, c:991,  ll:373, a:117, p:27,  mad:1}
+    {w:"29 jun", l:2651, g:2421, e:2440, c:1488, ll:488, a:164, p:83,  mad:11},
+    {w:"6 jul",  l:3121, g:2795, e:2896, c:1805, ll:614, a:214, p:104, mad:10},
+    {w:"13 jul", l:2861, g:2600, e:2646, c:1599, ll:550, a:195, p:83,  mad:9},
+    {w:"20 jul", l:3013, g:2686, e:2762, c:1643, ll:593, a:214, p:113, mad:8},
+    {w:"27 jul", l:3322, g:2998, e:3025, c:1827, ll:585, a:231, p:109, mad:7},
+    {w:"3 ago",  l:2678, g:2325, e:2409, c:1474, ll:561, a:208, p:94,  mad:6},
+    {w:"10 ago", l:2741, g:2392, e:2482, c:1443, ll:589, a:230, p:83,  mad:5},
+    {w:"17 ago", l:2624, g:2325, e:2392, c:1332, ll:535, a:204, p:62,  mad:4},
+    {w:"24 ago", l:2426, g:2131, e:2217, c:1266, ll:454, a:162, p:54,  mad:3},
+    {w:"31 ago", l:2404, g:2122, e:2170, c:1166, ll:459, a:169, p:36,  mad:2},
+    {w:"7 sep",  l:2172, g:1876, e:1956, c:991,  ll:373, a:116, p:23,  mad:1}
   ];
   /* Ventanas fijas D7/D14/D30 y total a hoy, por cohorte. */
   var MAD=[
@@ -474,12 +489,12 @@ footer{border-top:1px solid var(--line); padding-top:20px; font-size:12px; color
 
   /* ============================ KPIs ============================ */
   var KPI=[
-    {lab:"Inversión", val:"$1.40M", sub:"MXN", d:"+5.3%", dir:"flat", note:"vs $1.33M"},
-    {lab:"Leads", val:"2,172", d:"−9.7%", dir:"bad", note:"vs 2,404"},
-    {lab:"CPL", val:"$783", sub:"MXN", d:"+8.1%", dir:"bad", note:"vs $724"},
-    {lab:"Respuesta WhatsApp", val:"50.7%", d:"−3.0 pts", dir:"bad", note:"vs 53.7%"},
-    {lab:"Aplicaciones", val:"117", d:"−32%", dir:"flat", chip:"Inmaduro", note:"vs 172"},
-    {lab:"Conversión D7", val:"1.11%", d:"+0.11 pts", dir:"good", note:"vs 1.00%"}
+    {lab:"Leads creados", val:"2,172", d:"−9.7%", dir:"bad", note:"2,404"},
+    {lab:"Asignados", val:"86.4%", d:"−1.9 pts", dir:"bad", note:"88.3% · 296 leads sin asignar"},
+    {lab:"WhatsApp enviado", val:"90.1%", d:"−0.2 pts", dir:"flat", note:"90.3%"},
+    {lab:"WhatsApp contestado", val:"50.7%", d:"−3.0 pts", dir:"bad", note:"53.7%"},
+    {lab:"Llamada conectada", val:"373", d:"−18.7%", dir:"bad", note:"459"},
+    {lab:"Conversión D7", val:"1.11%", d:"+0.11 pts", dir:"good", note:"1.00%"}
   ];
   var kw=document.getElementById("kpis");
   KPI.forEach(function(k){
@@ -489,39 +504,40 @@ footer{border-top:1px solid var(--line); padding-top:20px; font-size:12px; color
       '<span class="val">'+k.val+(k.sub?'<small>'+k.sub+'</small>':'')+'</span>'+
       '<span class="delta '+cls+'"><i class="dot"></i>'+k.d+'</span>'+
       (k.chip?'<span class="chip">'+k.chip+'</span>':'');
-    bind(d,"<b>"+k.lab+"</b><br>"+k.note+" la semana anterior");
+    bind(d,"<b>"+k.lab+"</b><br>Semana anterior: "+k.note);
     kw.appendChild(d);
   });
 
   /* ============================ Funnel ============================ */
   var last=COH[COH.length-1];
   var STEPS=[
-    {k:"Leads creados", s:"toda la cohorte", v:last.l, base:null},
-    {k:"WhatsApp enviado", s:"sobre leads", v:last.e, base:last.l},
-    {k:"WhatsApp contestado", s:"sobre enviados", v:last.c, base:last.e},
-    {k:"Llamada conectada", s:"sobre contestados", v:last.ll, base:last.c},
-    {k:"Aplicación creada", s:"sobre llamadas", v:last.a, base:last.ll},
-    {k:"Aplicación pagada", s:"sobre aplicaciones · inmaduro", v:last.p, base:last.a, soft:true}
+    {k:"Leads creados", s:"toda la cohorte", v:last.l, base:null, prev:null},
+    {k:"Asignado a asesor", s:"sobre leads · rama paralela", v:last.g, base:last.l, prev:null, par:true},
+    {k:"WhatsApp enviado", s:"sobre leads", v:last.e, base:last.l, prev:last.l},
+    {k:"WhatsApp contestado", s:"sobre enviados", v:last.c, base:last.e, prev:last.e},
+    {k:"Llamada conectada", s:"sobre contestados", v:last.ll, base:last.c, prev:last.c},
+    {k:"Aplicación abierta", s:"sobre llamadas", v:last.a, base:last.ll, prev:last.ll},
+    {k:"Pagada", s:"sobre aplicaciones · inmaduro", v:last.p, base:last.a, prev:last.a, soft:true}
   ];
   var fw=document.getElementById("funnel");
   var maxLoss=0;
-  STEPS.forEach(function(st,i){ if(i>0){var L=STEPS[i-1].v-st.v; if(i<5 && L>maxLoss) maxLoss=L;} });
-  STEPS.forEach(function(st,i){
-    if(i>0){
-      var lost=STEPS[i-1].v-st.v;
+  STEPS.forEach(function(st){ if(st.prev && !st.soft){var L=st.prev-st.v; if(L>maxLoss) maxLoss=L;} });
+  STEPS.forEach(function(st){
+    if(st.prev){
+      var lost=st.prev-st.v;
       var dr=document.createElement("div"); dr.className="fdrop";
-      var worst=(lost===maxLoss && i<5);
-      dr.innerHTML='<span class="fd"><i></i>se pierden <b class="'+(worst?"worst":"")+'">'+n(lost)+'</b> leads'+
+      var worst=(lost===maxLoss && !st.soft);
+      dr.innerHTML='<span class="fd"><i></i>hacia '+st.k.toLowerCase()+': se pierden <b class="'+(worst?"worst":"")+'">'+n(lost)+'</b> leads'+
         (worst?' &nbsp;·&nbsp; <span class="worst">mayor caída de la semana</span>':'')+'</span>';
       fw.appendChild(dr);
     }
-    var row=document.createElement("div"); row.className="fstep";
+    var row=document.createElement("div"); row.className="fstep"+(st.par?" par":"");
     var w=(st.v/last.l*100).toFixed(2);
     row.innerHTML='<span class="fname">'+st.k+'<em>'+st.s+'</em></span>'+
-      '<span class="ftrack"><span class="fbar'+(st.soft?" soft":"")+'" style="width:'+w+'%"></span></span>'+
+      '<span class="ftrack"><span class="fbar'+(st.soft?" soft":"")+(st.par?" par":"")+'" style="width:'+w+'%"></span></span>'+
       '<span class="fnum">'+n(st.v)+'<span>'+(st.base?pct(st.v/st.base):pct(1,0)+' de leads')+'</span></span>';
     bind(row,"<b>"+st.k+"</b><br>"+n(st.v)+" leads · "+pct(st.v/last.l)+" de la cohorte"+
-      (st.base?"<br>"+pct(st.v/st.base)+" del paso anterior":""));
+      (st.par?"<br>No condiciona el envío de WhatsApp":st.prev?"<br>"+pct(st.v/st.prev)+" del paso anterior":""));
     fw.appendChild(row);
   });
 
@@ -532,7 +548,7 @@ footer{border-top:1px solid var(--line); padding-top:20px; font-size:12px; color
     var tr=document.createElement("tr");
     if(imm) tr.className="dim";
     tr.innerHTML='<td>'+r.w+(imm?'<span class="tag-imm">inmaduro</span>':'')+'</td>'+
-      '<td>'+n(r.l)+'</td><td>'+n(r.e)+'</td><td>'+n(r.c)+'</td>'+
+      '<td>'+n(r.l)+'</td><td>'+n(r.g)+'</td><td>'+n(r.e)+'</td><td>'+n(r.c)+'</td>'+
       '<td>'+n(r.ll)+'</td><td>'+n(r.a)+'</td><td>'+n(r.p)+'</td>'+
       '<td>'+pct(r.p/r.l,2)+'</td>';
     bind(tr,"<b>Semana del "+r.w+"</b><br>"+r.mad+" semana"+(r.mad===1?"":"s")+" de antigüedad"+
@@ -542,8 +558,8 @@ footer{border-top:1px solid var(--line); padding-top:20px; font-size:12px; color
 
   /* ============================ Heatmap de tasas ============================ */
   var RATES=[
-    {key:"e",  base:"l"},{key:"c", base:"e"},{key:"ll",base:"c"},
-    {key:"a",  base:"ll"},{key:"p", base:"a"}
+    {key:"g",  base:"l"},{key:"e", base:"l"},{key:"c", base:"e"},
+    {key:"ll", base:"c"},{key:"a", base:"ll"},{key:"p", base:"a"}
   ];
   var cols=RATES.map(function(rt){
     return COH.map(function(r){return r[rt.key]/r[rt.base]});
@@ -691,13 +707,13 @@ footer{border-top:1px solid var(--line); padding-top:20px; font-size:12px; color
 
   /* ============================ Tiles ============================ */
   var TILES=[
-    {n:"TILE 1", t:"Funnel por cohorte semanal", p:"Leads distintos que alcanzaron cada paso, por semana de creación. El corazón del tablero.",
-     m:"Tabla · 12 semanas · topic Leads and Applications", u:"https://koltin.omniapp.co/e/1:DCo-hmSP/1"},
-    {n:"TILE 2", t:"Tasa de paso a paso", p:"Los cinco porcentajes de supervivencia por semana. Aquí se ve el deterioro de respuesta de WhatsApp antes que en ningún otro lado.",
-     m:"Tabla con formato condicional · 12 semanas", u:"https://koltin.omniapp.co/e/1:nkpHFO55/1"},
+    {n:"TILE 1", t:"Funnel por cohorte semanal", p:"Los siete pasos —creado, asignado, WhatsApp enviado y contestado, llamada, aplicación y pago— contando leads distintos. El corazón del tablero.",
+     m:"Tabla · 12 semanas · topic Leads and Applications", u:"https://koltin.omniapp.co/e/1:MbOHWCI7/1"},
+    {n:"TILE 2", t:"Tasa de paso a paso", p:"Los seis porcentajes de supervivencia por semana. Aquí se ve el deterioro de respuesta de WhatsApp antes que en ningún otro lado.",
+     m:"Table calcs sobre la Tile 1 · formato condicional por columna", u:"https://koltin.omniapp.co/e/1:MbOHWCI7/1"},
     {n:"TILE 3", t:"Ventanas fijas D7 / D14 / D30", p:"Pagos de cada cohorte a los 7, 14 y 30 días más el total a hoy. Es la tile que hace comparables las semanas nuevas.",
-     m:"Tabla · 16 semanas", u:"https://koltin.omniapp.co/e/1:mMgDMBSk/1"},
-    {n:"TILE 4", t:"Funnel por canal y semana", p:"El mismo embudo abierto por utm source — google, meta y llamada entrante convierten muy distinto.",
+     m:"Tabla · 16 semanas", u:"https://koltin.omniapp.co/e/1:ZOTxLrx-/1"},
+    {n:"TILE 4", t:"Funnel por canal y semana", p:"El mismo embudo abierto por utm source — google, meta y llamada entrante convierten muy distinto. Ojo: esta query aún cuenta aplicaciones como objetos, hay que pasarla a leads distintos.",
      m:"Tabla pivoteada · top 4 fuentes", u:"https://koltin.omniapp.co/e/1:LEuq1ipg/1"},
     {n:"TILE 5", t:"Gasto unificado semanal", p:"Meta + Google en MXN y USD, con clicks, impresiones y variación semanal. Ya existe, se reutiliza tal cual.",
      m:"Query guardada · dashboard Marketing Performance", u:"https://koltin.omniapp.co/w/a535c33c?key=27"},
